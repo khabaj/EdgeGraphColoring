@@ -1,5 +1,8 @@
 package graphcoloring;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -13,19 +16,34 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFrame;
+
 import com.softtechdesign.ga.ChromStrings;
 import com.softtechdesign.ga.Crossover;
 import com.softtechdesign.ga.GAException;
 import com.softtechdesign.ga.GAStringsSeq;
 
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+
 public class EdgeGraphColoring extends GAStringsSeq {
-	private static final DataSet currentData = DataSet.GRAF_CYKLICZNY_9;
-	final static String fileName = currentData.getFilename();// "Graph1.txt";
+	private static final DataSet currentData = DataSet.MYCIEL6;
+	final static String fileName = "data/Graph1.txt"; // currentData.getFilename();//
+													// "Graph1.txt";
 	static String[] possibleColors;
 	static ArrayList<Edge> graphEdges;
 	static int numOfEdges = 0;
 	static int numOfVertices = 0;
 	static int highestVertexDegree;
+
+	/**/
+	public static Graph<Integer, String> graph = new SparseGraph<Integer, String>();
 
 	public EdgeGraphColoring() throws GAException {
 		super(numOfEdges, //// liczba genów w chromosomie
@@ -39,8 +57,8 @@ public class EdgeGraphColoring extends GAStringsSeq {
 				0, // max generations per prelim run
 				0.1, // prawdopodobieństwo wystąpienia mutacji
 				0, // liczba miejsc po przecinku dla wartości genu
-				possibleColors, // możliwe wartości genu 
-				Crossover.ctTwoPoint, // typ krzyżowania 
+				possibleColors, // możliwe wartości genu
+				Crossover.ctTwoPoint, // typ krzyżowania
 				true); // compute statisitics
 	}
 
@@ -48,7 +66,7 @@ public class EdgeGraphColoring extends GAStringsSeq {
 		try {
 
 			/*GraphGenerator graphGenerator = new GraphGenerator();
-			graphGenerator.generateRandomGraph(10, 15, "Graph1.txt");*/
+			graphGenerator.generateRandomGraph(10, 15, "data/Graph1.txt");*/
 
 			readFile(fileName);
 			System.out.println("Running on file: " + fileName);
@@ -64,6 +82,7 @@ public class EdgeGraphColoring extends GAStringsSeq {
 				Set<String> usedColors = new HashSet<>(Arrays.asList(genes));
 				int numOfUsedColors = usedColors.size();
 				System.out.println("Number of colors used in solution: " + numOfUsedColors);
+				printGraph(genes);
 			} else {
 				System.out.println("!!!!!!!!! COLORING NOT FOUND !!!!!!!!!!!");
 			}
@@ -72,6 +91,8 @@ public class EdgeGraphColoring extends GAStringsSeq {
 		} catch (FileNotFoundException | GAException ex) {
 			Logger.getAnonymousLogger().log(Level.SEVERE, "an exception was thrown:", ex);
 		}
+
+		
 	}
 
 	@Override
@@ -92,27 +113,52 @@ public class EdgeGraphColoring extends GAStringsSeq {
 				} else
 					usedColors.add(edgeColor);
 			}
-
 		}
 		return (numOfEdges + 1 - usedColors.size());
+	}
+
+	public static void printGraph(String[] genes) {
+		Layout<Integer, String> layout = new FRLayout<Integer, String>(graph);
+		layout.setSize(new Dimension(1000, 600));
+		VisualizationViewer<Integer, String> vv = new VisualizationViewer<Integer, String>(layout);
+
+		vv.setPreferredSize(new Dimension(1000, 600));
+/*
+		vv.getRenderContext().setVertexFillPaintTransformer((index) -> {
+			int x = Character.getNumericValue(chromosome.charAt(index - 1));
+			return new Color(x);
+		});*/
+
+		DefaultModalGraphMouse<Object, Object> graphMouse = new DefaultModalGraphMouse<>();
+		graphMouse.setMode(edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode.PICKING);
+		vv.setGraphMouse(graphMouse);
+
+		vv.setBackground(Color.gray);
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Integer>());
+		vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
+
+		JFrame frame = new JFrame("Edges Graph Coloring");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		frame.getContentPane().add(vv);
+		frame.pack();
+		frame.setVisible(true);
+		frame.repaint();
 	}
 
 	public static void readFile(String fileName) throws FileNotFoundException {
 
 		Scanner scanner = new Scanner(new FileReader(fileName));
-		Set<Integer> vertices = new HashSet<>();
-
 		numOfEdges = scanner.nextInt();
 		graphEdges = new ArrayList<>(numOfEdges);
-		
+
 		Map<Integer, Integer> degreeMap = new HashMap<>();
 
 		while (scanner.hasNextLine()) {
 			int edgeNumber = scanner.nextInt();
 			int verticeIndexStart = scanner.nextInt();
 			int verticeIndexEnd = scanner.nextInt();
-			vertices.add(verticeIndexStart);
-			vertices.add(verticeIndexEnd);
+
 			graphEdges.add(new Edge(edgeNumber, verticeIndexStart, verticeIndexEnd));
 
 			Integer startVertexDegree = degreeMap.get(verticeIndexStart);
@@ -124,12 +170,17 @@ public class EdgeGraphColoring extends GAStringsSeq {
 		}
 
 		highestVertexDegree = Collections.max(degreeMap.values());
-		numOfVertices = vertices.size();
 		possibleColors = new String[numOfEdges];
-		
+
 		for (int i = 0; i < numOfEdges; i++) {
 			possibleColors[i] = String.valueOf(i + 1);
+
+			Edge edge = graphEdges.get(i);
+
+			graph.addEdge("Edge " + edge.getEdgeNumber(), edge.getVertexSrc(), edge.getVertexDst());
 		}
+
+		numOfVertices = graph.getVertexCount();
 		scanner.close();
 	}
 
