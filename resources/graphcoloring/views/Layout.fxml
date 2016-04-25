@@ -1,92 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.embed.swing.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.embed.swing.SwingNode?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane prefHeight="745.0" prefWidth="975.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphcoloring.EdgeGraphColoring">
+<BorderPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphcoloring.EdgeGraphColoring">
    <left>
-      <VBox fillWidth="false" prefHeight="593.0" prefWidth="254.0" spacing="10.0">
+      <VBox fillWidth="false" prefHeight="625.0" prefWidth="269.0" spacing="10.0">
          <children>
-            <TitledPane animated="false" collapsible="false" prefHeight="71.0" prefWidth="254.0" text="File:">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0" prefWidth="274.0">
-                     <children>
-                        <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="36.0" text="File:" />
-                        <Button layoutX="162.0" layoutY="10.0" mnemonicParsing="false" onAction="#openFile" prefHeight="20.0" prefWidth="76.0" text="Open File" />
-                        <Label fx:id="fileNameLabel" layoutX="50.0" layoutY="14.0" prefHeight="17.0" prefWidth="108.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-            <TitledPane animated="false" collapsible="false" prefHeight="177.0" prefWidth="254.0" text="Generate graph">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Button layoutX="128.0" layoutY="119.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="106.0" text="Generate graph" wrapText="true" />
-                        <Label layoutX="14.0" layoutY="14.0" text="Number of vertices:" />
-                        <Label layoutX="14.0" layoutY="47.0" text="Number of edges:" />
-                        <TextField layoutX="128.0" layoutY="10.0" prefHeight="25.0" prefWidth="105.0" />
-                        <TextField layoutX="128.0" layoutY="43.0" prefHeight="25.0" prefWidth="105.0" />
-                        <Label layoutX="14.0" layoutY="85.0" text="File Name:" />
-                        <TextField layoutX="81.0" layoutY="81.0" prefHeight="25.0" prefWidth="153.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-            <TitledPane animated="false" collapsible="false" prefHeight="287.0" prefWidth="274.0" text="Parameters:">
-               <content>
-                  <GridPane hgap="10.0" pickOnBounds="false" prefHeight="242.0" prefWidth="272.0">
-                    <columnConstraints>
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="147.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="95.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="83.0" text="populationDim:" />
-                        <TextField prefHeight="5.0" prefWidth="95.0" GridPane.columnIndex="1" />
-                        <Label text="randomSelectionChance:" wrapText="true" GridPane.rowIndex="1" />
-                        <Label text="maxGenerations:" GridPane.rowIndex="2" />
-                        <Label text="numPrelimRuns:" GridPane.rowIndex="3" />
-                        <Label text="maxPrelimGenerations:" GridPane.rowIndex="4" />
-                        <Label text="mutationProb:" GridPane.rowIndex="5" />
-                        <Label text="chromDecimalPoints" GridPane.rowIndex="6" />
-                        <Label text="crossoverType" GridPane.rowIndex="7" />
-                        <TextField prefHeight="6.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </GridPane>
-               </content>
-            </TitledPane>
+            <TabPane fx:id="tabPane" prefHeight="355.0" prefWidth="267.0" stylesheets="@../css/style.css" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Graph">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="14.0" prefHeight="71.0" prefWidth="241.0" text="File:">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0" prefWidth="274.0">
+                                       <children>
+                                          <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="36.0" text="File:" />
+                                          <Button fx:id="openFileButton" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" onAction="#openFile" prefHeight="20.0" prefWidth="76.0" text="Open File" />
+                                          <Label fx:id="fileNameLabel" layoutX="50.0" layoutY="14.0" prefHeight="17.0" prefWidth="95.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </TitledPane>
+                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="105.0" prefHeight="177.0" prefWidth="241.0" text="Generate graph">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <Button layoutX="128.0" layoutY="119.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="106.0" text="Generate graph" wrapText="true" />
+                                          <Label layoutX="14.0" layoutY="14.0" text="Number of vertices:" />
+                                          <Label layoutX="14.0" layoutY="47.0" text="Number of edges:" />
+                                          <TextField layoutX="128.0" layoutY="10.0" prefHeight="25.0" prefWidth="105.0" />
+                                          <TextField layoutX="128.0" layoutY="43.0" prefHeight="25.0" prefWidth="105.0" />
+                                          <Label layoutX="14.0" layoutY="85.0" text="File Name:" />
+                                          <TextField layoutX="81.0" layoutY="81.0" prefHeight="25.0" prefWidth="153.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </TitledPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Parameters">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <GridPane hgap="10.0" layoutX="28.0" layoutY="14.0" pickOnBounds="false" prefHeight="261.0" prefWidth="211.0">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="139.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="62.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label prefHeight="17.0" prefWidth="83.0" text="populationDim:" />
+                                    <TextField fx:id="populationDim" prefHeight="5.0" prefWidth="95.0" GridPane.columnIndex="1" />
+                                    <Label text="randomSelectionChance:" wrapText="true" GridPane.rowIndex="2" />
+                                    <Label text="maxGenerations:" GridPane.rowIndex="3" />
+                                    <Label text="numPrelimRuns:" GridPane.rowIndex="4" />
+                                    <Label text="maxPrelimGenerations:" GridPane.rowIndex="5" />
+                                    <Label text="mutationProb:" GridPane.rowIndex="6" />
+                                    <Label text="chromDecimalPoints:" GridPane.rowIndex="7" />
+                                    <TextField fx:id="randomSelectionChance" prefHeight="6.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField fx:id="maxGenerations" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <TextField fx:id="numPrelimRuns" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <TextField fx:id="maxPrelimGenerations" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <TextField fx:id="mutationProb" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <TextField fx:id="chromDecimalPoints" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Label text="crossoverProb" GridPane.rowIndex="1" />
+                                    <TextField fx:id="crossoverProb" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </GridPane>
+                              <ComboBox fx:id="crossoverType" layoutX="107.0" layoutY="286.0" prefHeight="25.0" prefWidth="132.0" />
+                              <Label layoutX="21.0" layoutY="290.0" text="crossoverType:" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+               <VBox.margin>
+                  <Insets left="-10.0" top="-10.0" />
+               </VBox.margin>
+            </TabPane>
             <AnchorPane prefHeight="42.0" prefWidth="254.0">
                <children>
                   <Button fx:id="startButton" disable="true" layoutX="115.0" layoutY="7.0" mnemonicParsing="false" onAction="#start" prefHeight="29.0" prefWidth="139.0" text="Start" />
@@ -109,7 +131,7 @@
       <VBox prefHeight="110.0" prefWidth="714.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Console:" />
-            <TextArea fx:id="consoleTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="consoleTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
          </children>
       </VBox>
    </bottom>

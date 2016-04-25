@@ -6,7 +6,7 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
 public class Main extends Application {
@@ -16,12 +16,13 @@ public class Main extends Application {
 
 		try {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/Layout.fxml"));
-			ScrollPane rootElement = (ScrollPane) loader.load();
-			Scene scene = new Scene(rootElement, 1000, 750);
+			BorderPane rootElement = (BorderPane) loader.load();
+			Scene scene = new Scene(rootElement, 1000, 650);
+			scene.getStylesheets().add(Main.class.getResource("css/style.css").toExternalForm());
 
 			primaryStage.setTitle("Edge Graph Coloring");
 			primaryStage.setMinWidth(1000);
-			primaryStage.setMinHeight(750);
+			primaryStage.setMinHeight(650);
 			primaryStage.setScene(scene);
 
 			EdgeGraphColoring controller = (EdgeGraphColoring) loader.getController();

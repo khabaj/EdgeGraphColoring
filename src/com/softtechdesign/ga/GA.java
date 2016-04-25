@@ -332,9 +332,6 @@ public abstract class GA implements Runnable
                 //create a somewhat fit chromosome population for this prelim run
                 while (iGen < maxPrelimGenerations)
                 {
-                    System.out.println(iPrelimRuns + " of " + numPrelimRuns + " prelim runs --> " +
-                                       (iGen + 1) + " of " + maxPrelimGenerations + " generations");
-
                     computeFitnessRankings();
                     doGeneticMating();
                     copyNextGenToThisGen();
@@ -346,6 +343,9 @@ public abstract class GA implements Runnable
                     }
                     iGen++;
                 }
+                
+                System.out.println(iPrelimRuns + " of " + numPrelimRuns + " prelim runs --> " +
+                        (iGen) + " of " + maxPrelimGenerations + " generations");
 
                 computeFitnessRankings();
 

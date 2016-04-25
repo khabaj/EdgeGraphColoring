@@ -13,13 +13,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
@@ -40,9 +37,14 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -63,12 +65,43 @@ public class EdgeGraphColoring implements Initializable {
 
 	@FXML
 	private TextArea consoleTextArea;
-	
+
 	@FXML
 	private Label fileNameLabel;
-	
+
 	@FXML
-	private Button startButton;
+	private Button startButton;	
+
+	@FXML
+	private Button openFileButton;
+	
+	/* parameters */
+	@FXML
+	private TextField populationDim;
+
+	@FXML
+	private TextField crossoverProb;
+
+	@FXML
+	private TextField randomSelectionChance;
+
+	@FXML
+	private TextField maxGenerations;
+
+	@FXML
+	private TextField numPrelimRuns;
+
+	@FXML
+	private TextField maxPrelimGenerations;
+
+	@FXML
+	private TextField mutationProb;
+
+	@FXML
+	private TextField chromDecimalPoints;
+
+	@FXML
+	private ComboBox<String> crossoverType = new ComboBox<>();
 
 	final int[] colors = new int[] { 0x000000, 0xFFFF00, 0x1CE6FF, 0xFF34FF, 0xFF4A46, 0x008941, 0x006FA6, 0xA30059,
 			0xFFDBE5, 0x7A4900, 0x0000A6, 0x63FFAC, 0xB79762, 0x004D43, 0x8FB0FF, 0x997D87, 0x5A0007, 0x809693,
@@ -99,6 +132,20 @@ public class EdgeGraphColoring implements Initializable {
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
 
+		populationDim.setText("1000");
+		crossoverProb.setText("0.4");
+		randomSelectionChance.setText("10");
+		maxGenerations.setText("1000");
+		numPrelimRuns.setText("20");
+		maxPrelimGenerations.setText("20");
+		mutationProb.setText("0.2");
+		chromDecimalPoints.setText("0");
+
+		crossoverType.getItems().add(CrossoverName.ctOnePoint);
+		crossoverType.getItems().add(CrossoverName.ctTwoPoint);
+		crossoverType.getItems().add(CrossoverName.ctRoulette);
+		crossoverType.getItems().add(CrossoverName.ctUniform);		
+		crossoverType.setValue(CrossoverName.ctTwoPoint);
 	}
 
 	public void appendText(String valueOf) {
@@ -110,6 +157,11 @@ public class EdgeGraphColoring implements Initializable {
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
+	
+	private void disableElements(boolean disabled) {
+		openFileButton.setDisable(disabled);
+	}
+	
 
 	@FXML
 	public void openFile() {
@@ -119,7 +171,7 @@ public class EdgeGraphColoring implements Initializable {
 		fileChooser.setInitialDirectory(new File("."));
 
 		File file = fileChooser.showOpenDialog(stage);
-		if (file != null) {						
+		if (file != null) {
 			try {
 				readFile(file);
 				fileName = file.getName();
@@ -130,7 +182,7 @@ public class EdgeGraphColoring implements Initializable {
 				startButton.setDisable(true);
 				fileNameLabel.setText("");
 				System.err.println("Error while loading file!");
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 	}
@@ -139,20 +191,68 @@ public class EdgeGraphColoring implements Initializable {
 	public void start() throws GAException {
 
 		// GraphGenerator graphGenerator = new GraphGenerator();
-		// graphGenerator.generateRandomGraph(40, 45, "data/Graph1.txt");
-
+		// graphGenerator.generateRandomGraph(40, 45, "data/Graph1.txt");		
 		consoleTextArea.clear();
-		
+
+		int populationDimParam;
+		double crossoverProbParam;
+		int randomSelectionChanceParam;
+		int maxGenerationsParam;
+		int numPrelimRunsParam;
+		int maxPrelimGenerationsParam;
+		double mutationProbParam;
+		int chromDecimalPointsParam;
+		int crossoverTypeParam;
+
+		try {
+			populationDimParam = Integer.parseInt(populationDim.getText());
+			crossoverProbParam = Double.parseDouble(crossoverProb.getText());
+			randomSelectionChanceParam = Integer.parseInt(randomSelectionChance.getText());
+			maxGenerationsParam = Integer.parseInt(maxGenerations.getText());
+			numPrelimRunsParam = Integer.parseInt(numPrelimRuns.getText());
+			maxPrelimGenerationsParam = Integer.parseInt(maxPrelimGenerations.getText());
+			mutationProbParam = Double.parseDouble(mutationProb.getText());
+			chromDecimalPointsParam = Integer.parseInt(chromDecimalPoints.getText());
+
+			switch (crossoverType.getValue()) {
+			case CrossoverName.ctOnePoint:
+				crossoverTypeParam = Crossover.ctOnePoint;
+				break;
+			case CrossoverName.ctTwoPoint:
+				crossoverTypeParam = Crossover.ctTwoPoint;
+				break;
+			case CrossoverName.ctUniform:
+				crossoverTypeParam = Crossover.ctUniform;
+				break;
+			case CrossoverName.ctRoulette:
+				crossoverTypeParam = Crossover.ctRoulette;
+				break;
+			default:
+				crossoverTypeParam = Crossover.ctTwoPoint;
+			}
+
+		} catch (Exception e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Incorrect parameters");
+			alert.setHeaderText("Incorrect parameters");
+			alert.setContentText("Please enter correct parameters.");
+			alert.showAndWait();
+			return;
+		}
+
 		Runnable graphRunnable = () -> {
 			
 			System.out.println("Running on file: " + fileName);
 			System.out.println("Vertices: " + numOfVertices);
 			System.out.println("Edges: " + graph.getEdgeCount());
+			
+			disableElements(true);
 
 			GAStringsSeq gaGraphColoring;
 			try {
-				gaGraphColoring = new GAStringsSeq(numOfEdges, 1000, 0.4, 10, 1000, 20, 20, 0.2, 0, possibleColors,
-						Crossover.ctTwoPoint, true) {
+				gaGraphColoring = new GAStringsSeq(numOfEdges, populationDimParam, crossoverProbParam,
+						randomSelectionChanceParam, maxGenerationsParam, numPrelimRunsParam, maxPrelimGenerationsParam,
+						mutationProbParam, chromDecimalPointsParam, possibleColors, crossoverTypeParam, true) {
 
 					@Override
 					protected double getFitness(int chromeIndex) {
@@ -201,6 +301,8 @@ public class EdgeGraphColoring implements Initializable {
 			} catch (GAException | InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				disableElements(false);
 			}
 		};
 
