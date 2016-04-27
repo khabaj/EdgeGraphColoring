@@ -25,7 +25,7 @@ public class Main extends Application {
 			primaryStage.setMinHeight(650);
 			primaryStage.setScene(scene);
 
-			EdgeGraphColoring controller = (EdgeGraphColoring) loader.getController();
+			GraphColoringController controller = (GraphColoringController) loader.getController();
 			controller.setStage(primaryStage);
 			primaryStage.show();
 

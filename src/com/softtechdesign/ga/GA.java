@@ -87,8 +87,9 @@ public abstract class GA implements Runnable
     /** compute statistics for each generation during evolution? */ 
     boolean computeStatistics; 
 
-    /** initialize the population (chromosomes) to random values */
-    abstract protected void initPopulation();
+    /** initialize the population (chromosomes) to random values 
+     * @throws InterruptedException */
+    abstract protected void initPopulation() throws InterruptedException;
     
     /** do a random mutation on given chromosome */
     abstract protected void doRandomMutation(int iChromIndex);
@@ -110,7 +111,11 @@ public abstract class GA implements Runnable
      */
     public void run()
     {
-        evolve();
+        try {
+			evolve();
+		} catch (InterruptedException e) {
+			System.out.println("Stopped.");
+		}
     }
 
     /**
@@ -310,8 +315,9 @@ public abstract class GA implements Runnable
     /**
      * Main routine that runs the evolution simulation for this population of chromosomes.  
      * @return number of generations
+     * @throws InterruptedException 
      */
-    public int evolve()
+    public int evolve() throws InterruptedException
     {
         int iGen;
         int iPrelimChrom, iPrelimChromToUsePerRun;
@@ -327,11 +333,15 @@ public abstract class GA implements Runnable
             for (int iPrelimRuns = 1; iPrelimRuns <= numPrelimRuns; iPrelimRuns++)
             {
                 iGen = 0;
+				if (Thread.currentThread().isInterrupted())
+					throw new InterruptedException();
                 initPopulation();
 
                 //create a somewhat fit chromosome population for this prelim run
                 while (iGen < maxPrelimGenerations)
                 {
+                	if (Thread.currentThread().isInterrupted())
+    					throw new InterruptedException();
                     computeFitnessRankings();
                     doGeneticMating();
                     copyNextGenToThisGen();
@@ -373,6 +383,8 @@ public abstract class GA implements Runnable
         iGen = 0;
         while (iGen < maxGenerations)
         {
+        	if (Thread.currentThread().isInterrupted())
+				throw new InterruptedException();
             computeFitnessRankings();
             doGeneticMating();
             copyNextGenToThisGen();

@@ -39,6 +39,7 @@ public abstract class GAStringsSeq extends GA
      * @param crossoverType
      * @param computeStatistics
      * @throws GAException
+     * @throws InterruptedException 
      */
     public GAStringsSeq(int chromosomeDim,
                         int populationDim,
@@ -51,7 +52,7 @@ public abstract class GAStringsSeq extends GA
                         int chromDecPts,
                         String[] possGeneValues,
                         int crossoverType,
-                        boolean computeStatistics) throws GAException
+                        boolean computeStatistics) throws GAException, InterruptedException
     {
         super(chromosomeDim, populationDim, crossoverProb, randomSelectionChance, maxGenerations,
           numPrelimRuns, maxPrelimGenerations, mutationProb, crossoverType, computeStatistics);
@@ -126,17 +127,17 @@ public abstract class GAStringsSeq extends GA
 
     /**
      * Create random chromosomes from the given gene space.
+     * @throws InterruptedException 
      */
-    protected void initPopulation()
-    {
-        for (int i=0; i < populationDim; i++)
-        {
-          for (int j=0; j < chromosomeDim; j++)
-                ((ChromStrings)this.chromosomes[i]).setGene(getRandomGeneFromPossGenes(), j);
-          this.chromosomes[i].fitness = getFitness(i);
-        }
-    }
-
+	protected void initPopulation() throws InterruptedException {
+		for (int i = 0; i < populationDim; i++) {
+			if (Thread.currentThread().isInterrupted())
+				throw new InterruptedException();
+			for (int j = 0; j < chromosomeDim; j++)
+				((ChromStrings) this.chromosomes[i]).setGene(getRandomGeneFromPossGenes(), j);
+			this.chromosomes[i].fitness = getFitness(i);
+		}
+	}
 
     /**
      * Genetically recombine the given chromosomes using a one point crossover technique.
