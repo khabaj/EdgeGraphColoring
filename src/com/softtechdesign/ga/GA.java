@@ -378,7 +378,7 @@ public abstract class GA implements Runnable
             System.out.println("INITIAL POPULATION (NO PRELIM RUNS):");
 
         //Add Preliminary Chromosomes to list box
-        addChromosomesToLog(0, 10);
+        //addChromosomesToLog(0, 10);
 
         iGen = 0;
         while (iGen < maxGenerations)
@@ -403,7 +403,7 @@ public abstract class GA implements Runnable
         System.out.println("GEN " + (iGen + 1) + " AVG FITNESS = " + this.genAvgFitness[iGen-1] +
                            " AVG DEV = " + this.genAvgDeviation[iGen-1]);
 
-        addChromosomesToLog(iGen, 10); //display Chromosomes to system.out
+        //addChromosomesToLog(iGen, 10); //display Chromosomes to system.out
 
         computeFitnessRankings();
         System.out.println("Best Chromosome Found: ");

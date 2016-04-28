@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -22,7 +23,7 @@
    <left>
       <VBox fillWidth="false" prefHeight="625.0" prefWidth="269.0" spacing="10.0">
          <children>
-            <TabPane fx:id="tabPane" prefHeight="430.0" prefWidth="267.0" stylesheets="@../css/style.css" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="tabPane" prefHeight="402.0" prefWidth="267.0" style="-fx-border-width: 1; -fx-border-color: lightgray;" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Graph">
                   <content>
@@ -39,22 +40,20 @@
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="105.0" prefHeight="177.0" prefWidth="241.0" text="Generate graph:">
+                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="105.0" prefHeight="138.0" prefWidth="241.0" text="Generate graph:">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <Button layoutX="128.0" layoutY="119.0" mnemonicParsing="false" onAction="#generateGraph" prefHeight="21.0" prefWidth="106.0" text="Generate graph" wrapText="true" />
+                                          <Button fx:id="generateGraphButton" layoutX="128.0" layoutY="76.0" mnemonicParsing="false" onAction="#generateGraph" prefHeight="21.0" prefWidth="106.0" text="Generate graph" wrapText="true" />
                                           <Label layoutX="14.0" layoutY="14.0" text="Number of vertices:" />
                                           <Label layoutX="14.0" layoutY="47.0" text="Number of edges:" />
                                           <TextField fx:id="genNumberOfVertices" layoutX="128.0" layoutY="10.0" prefHeight="25.0" prefWidth="105.0" />
                                           <TextField fx:id="genNumberOfEdges" layoutX="128.0" layoutY="43.0" prefHeight="25.0" prefWidth="105.0" />
-                                          <Label layoutX="14.0" layoutY="85.0" text="File Name:" />
-                                          <TextField fx:id="genFileName" layoutX="81.0" layoutY="81.0" prefHeight="25.0" prefWidth="153.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
                               </TitledPane>
-                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="289.0" prefHeight="87.0" prefWidth="241.0" text="Visualisation:">
+                              <TitledPane animated="false" collapsible="false" layoutX="12.0" layoutY="267.0" prefHeight="87.0" prefWidth="241.0" text="Visualisation:">
                                  <content>
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="68.0" prefWidth="239.0">
                                        <children>
@@ -136,10 +135,15 @@
       <SwingNode fx:id="visualizationPane" />
    </center>
    <bottom>
-      <VBox prefHeight="110.0" prefWidth="714.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="156.0" prefWidth="980.0" spacing="2.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Console:" />
-            <TextArea fx:id="consoleTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+            <TextArea fx:id="consoleTextArea" editable="false" prefHeight="189.0" prefWidth="980.0" wrapText="true" />
+            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#clearConsole" prefHeight="25.0" prefWidth="74.0" text="Clear" />
+               </children>
+            </HBox>
          </children>
       </VBox>
    </bottom>

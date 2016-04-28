@@ -1,5 +1,6 @@
 package graphcoloring;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -7,21 +8,21 @@ import java.util.Random;
 
 public class GraphGenerator {
 
-	public void generateRandomGraph(int numberOfVertices, int numberOfEdges, String fileName) {
+	public void generateRandomGraph(int numberOfVertices, int numberOfEdges, File file) {
 
 		PrintWriter writer = null;
 
 		boolean[][] adjArray = new boolean[numberOfVertices][numberOfVertices];
 		try {
-			writer = new PrintWriter(fileName, "UTF-8");
+			writer = new PrintWriter(file, "UTF-8");
 			writer.print(numberOfEdges);
 
 			int j = 1;
 
 			for (int i = 1; i <= numberOfEdges; i++) {
 				if (i < numberOfVertices) {
-					adjArray[i - 1][j - 1] = true;
-					adjArray[j - 1][i - 1] = true;
+					adjArray[i - 1][j] = true;
+					adjArray[j][i - 1] = true;
 
 					writer.print("\n" + i + " " + j + " " + ++j);
 				} else {

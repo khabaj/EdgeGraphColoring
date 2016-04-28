@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Set;
 
+import javax.swing.JPanel;
 
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
@@ -49,6 +50,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class GraphColoringController implements Initializable {
@@ -127,7 +129,7 @@ public class GraphColoringController implements Initializable {
 	TextField genNumberOfEdges;
 	
 	@FXML
-	TextField genFileName;
+	Button generateGraphButton;
 
 	final int[] colors = new int[] { 0x000000, 0xFFFF00, 0x1CE6FF, 0xFF34FF, 0xFF4A46, 0x008941, 0x006FA6, 0xA30059,
 			0xFFDBE5, 0x7A4900, 0x0000A6, 0x63FFAC, 0xB79762, 0x004D43, 0x8FB0FF, 0x997D87, 0x5A0007, 0x809693,
@@ -190,6 +192,7 @@ public class GraphColoringController implements Initializable {
 		Platform.runLater(() -> {
 			openFileButton.setDisable(disabled);
 			startButton.setText(disabled ? "Stop" : "Start");
+			generateGraphButton.setDisable(disabled);
 		});
 	}
 
@@ -198,6 +201,7 @@ public class GraphColoringController implements Initializable {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open file");
 		fileChooser.setInitialDirectory(new File("."));
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("Text files (*.txt)", "*.txt"));
 
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
@@ -209,6 +213,7 @@ public class GraphColoringController implements Initializable {
 				startButton.setDisable(false);
 				visualizationViewer = null;
 				coloredEdges = null;
+				edgeLabelTransformer.setGenes(null);
 				printGraph();
 				System.out.println("Loaded file: " + fileName);
 			} catch (Exception e) {
@@ -381,7 +386,7 @@ public class GraphColoringController implements Initializable {
 			if (visualizationViewer == null) {
 				Layout<Integer, String> layout = new FRLayout<Integer, String>(graph);
 				layout.setSize(new Dimension(600, 500));
-				visualizationViewer = new VisualizationViewer<Integer, String>(layout);				
+				visualizationViewer = new VisualizationViewer<Integer, String>(layout);
 
 				DefaultModalGraphMouse<Object, Object> graphMouse = new DefaultModalGraphMouse<>();
 				graphMouse.setMode(edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode.TRANSFORMING);
@@ -393,21 +398,21 @@ public class GraphColoringController implements Initializable {
 				visualizationViewer.getRenderContext()
 						.setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(2.0f)));
 				visualizationPane.setContent(visualizationViewer);
-				showEdgesLabels();
-			} else {
-				if (coloredEdges != null) {
+			} 
 
-					visualizationViewer.getRenderContext().setEdgeDrawPaintTransformer((index) -> {
-						int value = Integer.parseInt(coloredEdges[Integer.parseInt(index) - 1]);
-						return new Color(colors[value % 128]);
-					});
-					showEdgesLabels();
-				}
-				visualizationViewer.repaint();
+			if (coloredEdges != null) {
+
+				visualizationViewer.getRenderContext().setEdgeDrawPaintTransformer((index) -> {
+					int value = Integer.parseInt(coloredEdges[Integer.parseInt(index) - 1]);
+					return new Color(colors[value % 128]);
+				});				
 			}
-		} else if (visualizationViewer != null) {
+			showEdgesLabels();
+			visualizationViewer.repaint();
+		} else if (visualizationViewer != null) {	
+			visualizationViewer = null;
+			visualizationPane.setContent(new JPanel());
 		}
-
 	}
 
 	@FXML
@@ -430,10 +435,61 @@ public class GraphColoringController implements Initializable {
 	@FXML
 	public void generateGraph() {
 		
-		GraphGenerator graphGenerator = new GraphGenerator();
-		graphGenerator.generateRandomGraph(Integer.parseInt(genNumberOfVertices.getText()), 
-				Integer.parseInt(genNumberOfEdges.getText()), "data/" + genFileName.getText());
+		try {
+			int numVert = Integer.parseInt(genNumberOfVertices.getText());
+			int numEdges = Integer.parseInt(genNumberOfEdges.getText());
+			int maxPossibleEdges = numVert * (numVert-1) / 2;
+			if(numEdges > maxPossibleEdges) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Incorrect graph generation parameters");
+				alert.setHeaderText("Incorrect graph generation parameters");
+				alert.setContentText("Max number of Edges for " + numVert 
+						+ " vertices = " + maxPossibleEdges);
+				alert.showAndWait();
+				return;
+			}
+			
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Save file");
+			fileChooser.setInitialDirectory(new File("."));		
+			fileChooser.getExtensionFilters().add(new ExtensionFilter("Text files (*.txt)", "*.txt"));
+			
+			File file = fileChooser.showSaveDialog(stage);		
+			if (file!=null) {
+				GraphGenerator graphGenerator = new GraphGenerator();
+				graphGenerator.generateRandomGraph(numVert, numEdges, file);
+				
+				readFile(file);
+				fileName = file.getName();
+				fileNameLabel.setText(fileName);
+				consoleTextArea.clear();
+				startButton.setDisable(false);
+				visualizationViewer = null;
+				coloredEdges = null;
+				edgeLabelTransformer.setGenes(null);
+				printGraph();
+				System.out.println("Loaded file: " + fileName);
+			}
+		} catch (NumberFormatException ex) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Incorrect graph generation parameters");
+			alert.setHeaderText("Incorrect graph generation parameters");
+			alert.setContentText("Please enter correct parameters.");
+			alert.showAndWait();
+		} catch (FileNotFoundException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("File not found");
+			alert.setHeaderText("File not found");
+			alert.setContentText("File not Found.");
+			alert.showAndWait();
+		}
+		
 	}
 	
+	
+	@FXML
+	public void clearConsole() {
+		consoleTextArea.clear();
+	}
 
 }

@@ -18,8 +18,7 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/Layout.fxml"));
 			BorderPane rootElement = (BorderPane) loader.load();
 			Scene scene = new Scene(rootElement, 1000, 650);
-			scene.getStylesheets().add(Main.class.getResource("css/style.css").toExternalForm());
-
+			
 			primaryStage.setTitle("Edge Graph Coloring");
 			primaryStage.setMinWidth(1000);
 			primaryStage.setMinHeight(650);
