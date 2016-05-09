@@ -400,7 +400,7 @@ public abstract class GA implements Runnable
             	System.out.print((iGen +1) + " of " + maxGenerations + " generations");
             	System.out.println(" Fitness=" + this.chromosomes[bestFitnessChromIndex].fitness);            	
             }
-            if (this.chromosomes[bestFitnessChromIndex].fitness > 0) {
+            if (this.chromosomes[bestFitnessChromIndex].fitness >= 0) {
             	System.out.println("------------------------------------------------------------------");
             	System.out.println("Best chromosome found afer "+ (iGen +1) +" generations. Fitness=" + this.chromosomes[bestFitnessChromIndex].fitness);
             	System.out.println("------------------------------------------------------------------");
