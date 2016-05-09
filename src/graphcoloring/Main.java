@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.fxml.FXMLLoader;
 
@@ -35,8 +37,10 @@ public class Main extends Application {
 				}
 			});
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {			
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setContentText(e.toString());
+			alert.showAndWait();
 		}
 	}
 

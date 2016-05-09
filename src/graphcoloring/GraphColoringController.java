@@ -160,13 +160,13 @@ public class GraphColoringController implements Initializable {
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
 
-		populationDim.setText("100");
-		crossoverProb.setText("0.4");
+		populationDim.setText("30");
+		crossoverProb.setText("85");
 		randomSelectionChance.setText("10");
-		maxGenerations.setText("100");
+		maxGenerations.setText("1000000");
 		numPrelimRuns.setText("20");
 		maxPrelimGenerations.setText("20");
-		mutationProb.setText("0.2");
+		mutationProb.setText("0.1");
 		chromDecimalPoints.setText("0");
 
 		crossoverType.getItems().add(CrossoverName.ctOnePoint);
@@ -216,10 +216,13 @@ public class GraphColoringController implements Initializable {
 				edgeLabelTransformer.setGenes(null);
 				printGraph();
 				System.out.println("Loaded file: " + fileName);
+				System.out.println("Vertices: " + numOfVertices);
+				System.out.println("Edges: " + graph.getEdgeCount());
 			} catch (Exception e) {
 				startButton.setDisable(true);
 				fileNameLabel.setText("");
 				System.err.println("Error while loading file!");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -281,12 +284,12 @@ public class GraphColoringController implements Initializable {
 		
 		Runnable graphRunnable = () -> {
 
-			System.out.println("Running on file: " + fileName);
-			System.out.println("Vertices: " + numOfVertices);
-			System.out.println("Edges: " + graph.getEdgeCount());
+			System.out.println("Running on file: " + fileName);			
 
 			disableElements(true);
 
+			long startTime = System.currentTimeMillis();
+			
 			GAStringsSeq gaGraphColoring;
 			try {
 				gaGraphColoring = new GAStringsSeq(numOfEdges, 
@@ -307,6 +310,8 @@ public class GraphColoringController implements Initializable {
 						ChromStrings chromosome = getChromosome(chromeIndex);
 						String genes[] = chromosome.getGenes();
 						Set<String> usedColors = new HashSet<>(Arrays.asList(genes));
+						
+						int badColoring = 0;
 
 						for (Integer vertex : graph.getVertices()) {
 							Collection<String> incidentEdges = graph.getIncidentEdges(vertex);
@@ -314,19 +319,26 @@ public class GraphColoringController implements Initializable {
 							for (String incidentEdge : incidentEdges) {
 								String edgeColor = genes[Integer.parseInt(incidentEdge) - 1];
 								if (incidentEdgesColors.contains(edgeColor)) {
-									return -1;
+									badColoring++; 
 								} else {
 									incidentEdgesColors.add(edgeColor);
 								}
 							}
-						}
-						return (genes.length - usedColors.size());
+						}	
+						if(badColoring > 0) {
+							return (genes.length - usedColors.size()) - numOfEdges - 2*badColoring;
+						} else 
+							return (genes.length - usedColors.size());
 					}
 				};
 				gaGraphColoring.run();
+				long duration = System.currentTimeMillis() - startTime;
+				
 				System.out.println("--------------------------------------");
-				if (gaGraphColoring.getFittestChromosomesFitness() >= 0) {
-
+				System.out.println("Vertices: " + numOfVertices);
+				System.out.println("Edges: " + graph.getEdgeCount());
+				if (gaGraphColoring.getFittestChromosomesFitness() >= 0) {					
+					
 					ChromStrings chromosome = (ChromStrings) gaGraphColoring.getFittestChromosome();
 					coloredEdges = chromosome.getGenes();
 					Set<String> usedColors = new HashSet<>(Arrays.asList(coloredEdges));
@@ -336,8 +348,9 @@ public class GraphColoringController implements Initializable {
 					printGraph();
 				} else {
 					System.out.println("!!!!!!!!! COLORING NOT FOUND !!!!!!!!!!!");
-				}
+				}				
 				System.out.println("Expected optimal number of colors <= " + (highestVertexDegree + 1));
+				System.out.println("Duration: " + duration/1000.0 + "s");
 			} catch (GAException | InterruptedException e) {
 				System.out.println("Thread interrupted");
 				e.printStackTrace();
@@ -366,15 +379,18 @@ public class GraphColoringController implements Initializable {
 			int verticeIndexEnd = scanner.nextInt();
 
 			graph.addEdge(String.valueOf(edgeNumber), verticeIndexStart, verticeIndexEnd);
-			colors.add(String.valueOf(edgeNumber));
 		}
 
 		for (Integer vertex : graph.getVertices()) {
 			int degree = graph.degree(vertex);
-			highestVertexDegree = highestVertexDegree < degree ? degree : highestVertexDegree;
+			highestVertexDegree = highestVertexDegree+1 < degree ? degree : highestVertexDegree;
 		}
 
-		possibleColors = colors.toArray(new String[colors.size()]);
+		for(int i=1; i<=highestVertexDegree+1; i++) {
+			colors.add(String.valueOf(i));
+		}
+		
+		possibleColors = colors.toArray(new String[colors.size()]);		
 		numOfVertices = graph.getVertexCount();
 		scanner.close();
 	}
