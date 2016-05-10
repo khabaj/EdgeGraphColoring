@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -72,7 +73,7 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <GridPane hgap="10.0" layoutX="28.0" layoutY="14.0" pickOnBounds="false" prefHeight="261.0" prefWidth="211.0">
+                              <GridPane hgap="10.0" layoutX="28.0" layoutY="14.0" pickOnBounds="false" prefHeight="283.0" prefWidth="211.0">
                                 <columnConstraints>
                                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="139.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="62.0" />
@@ -89,28 +90,55 @@
                                 </rowConstraints>
                                  <children>
                                     <Label prefHeight="17.0" prefWidth="83.0" text="populationDim:" />
-                                    <TextField fx:id="populationDim" prefHeight="5.0" prefWidth="95.0" GridPane.columnIndex="1" />
+                                    <TextField fx:id="populationDim" prefHeight="5.0" prefWidth="95.0" GridPane.columnIndex="1">
+                                       <tooltip>
+                                          <Tooltip text="Number of chromosomes to evolve." />
+                                       </tooltip></TextField>
                                     <Label text="randomSelectionChance:" wrapText="true" GridPane.rowIndex="2" />
                                     <Label text="maxGenerations:" GridPane.rowIndex="3" />
                                     <Label text="numPrelimRuns:" GridPane.rowIndex="4" />
                                     <Label text="maxPrelimGenerations:" GridPane.rowIndex="5" />
                                     <Label text="mutationProb:" GridPane.rowIndex="6" />
                                     <Label text="chromDecimalPoints:" GridPane.rowIndex="7" />
-                                    <TextField fx:id="randomSelectionChance" prefHeight="6.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <TextField fx:id="maxGenerations" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <TextField fx:id="numPrelimRuns" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <TextField fx:id="maxPrelimGenerations" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <TextField fx:id="mutationProb" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                    <TextField fx:id="chromDecimalPoints" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <TextField fx:id="randomSelectionChance" prefHeight="6.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <tooltip>
+                                          <Tooltip text="1-100 (e.g. 10 = 10% chance of random selection--not based on fitness). Setting nonzero randomSelectionChance helps maintain genetic diversity during evolution" />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="maxGenerations" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <tooltip>
+                                          <Tooltip text="Maximum generations to evolve." />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="numPrelimRuns" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <tooltip>
+                                          <Tooltip text="Number of prelim generations to evolve." />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="maxPrelimGenerations" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                       <tooltip>
+                                          <Tooltip text="Prelim generations. Prelim runs are useful for building fitter &quot;starting&quot; chromosome stock before the main evolution run." />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="mutationProb" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                       <tooltip>
+                                          <Tooltip text="Probability of a mutation occuring during genetic mating. For example, 0.03 means 3% chance." />
+                                       </tooltip></TextField>
+                                    <TextField fx:id="chromDecimalPoints" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                       <tooltip>
+                                          <Tooltip text="Chromosome decim" />
+                                       </tooltip></TextField>
                                     <Label text="crossoverProb" GridPane.rowIndex="1" />
-                                    <TextField fx:id="crossoverProb" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="crossoverProb" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <tooltip>
+                                          <Tooltip text="Probability that a crossover will occur during genetic mating." />
+                                       </tooltip></TextField>
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>
                               </GridPane>
-                              <ComboBox fx:id="crossoverType" layoutX="107.0" layoutY="286.0" prefHeight="25.0" prefWidth="132.0" />
-                              <Label layoutX="21.0" layoutY="290.0" text="crossoverType:" />
+                              <ComboBox fx:id="crossoverType" layoutX="110.0" layoutY="305.0" prefHeight="25.0" prefWidth="128.0">
+                                 <tooltip>
+                                    <Tooltip text="One Point - Genetically recombine the given chromosomes using a one point crossover technique.&#10;Two Point - Genetically recombine the given chromosomes using a two point crossover technique which combines two chromosomes at two random genes (loci), creating two new chromosomes.&#10;Uniform - Genetically recombine the given chromosomes using a uniform crossover technique. This technique randomly swaps genes from one chromosome to another.&#10;Roulette - either one point, two point, or uniform&#10;" />
+                                 </tooltip></ComboBox>
+                              <Label layoutX="24.0" layoutY="309.0" text="crossoverType:" />
                            </children>
                         </AnchorPane>
                   </content>

@@ -218,6 +218,7 @@ public class GraphColoringController implements Initializable {
 				System.out.println("Loaded file: " + fileName);
 				System.out.println("Vertices: " + numOfVertices);
 				System.out.println("Edges: " + graph.getEdgeCount());
+				System.out.println("Highest vertex degree:" + highestVertexDegree);
 			} catch (Exception e) {
 				startButton.setDisable(true);
 				fileNameLabel.setText("");
@@ -326,7 +327,7 @@ public class GraphColoringController implements Initializable {
 							}
 						}	
 						if(badColoring > 0) {
-							return (genes.length - usedColors.size()) - numOfEdges - 2*badColoring;
+							return - usedColors.size() - 2*badColoring;
 						} else 
 							return (genes.length - usedColors.size());
 					}
@@ -485,6 +486,9 @@ public class GraphColoringController implements Initializable {
 				edgeLabelTransformer.setGenes(null);
 				printGraph();
 				System.out.println("Loaded file: " + fileName);
+				System.out.println("Vertices: " + numOfVertices);
+				System.out.println("Edges: " + graph.getEdgeCount());
+				System.out.println("Highest vertex degree:" + highestVertexDegree);
 			}
 		} catch (NumberFormatException ex) {
 			Alert alert = new Alert(AlertType.ERROR);
