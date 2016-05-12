@@ -326,10 +326,11 @@ public class GraphColoringController implements Initializable {
 								}
 							}
 						}	
-						if(badColoring > 0) {
+						if(badColoring > 0) 
 							return - usedColors.size() - 2*badColoring;
-						} else 
+						else 
 							return (genes.length - usedColors.size());
+						
 					}
 				};
 				gaGraphColoring.run();

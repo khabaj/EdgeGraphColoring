@@ -394,10 +394,8 @@ public abstract class GA implements Runnable
                 this.genAvgDeviation[iGen] = getAvgDeviationAmongChroms();
                 this.genAvgFitness[iGen] = getAvgFitness();
             }
-            if((chromosomeDim < 10000 && (iGen +1) % 50 == 0) 
-            		|| (chromosomeDim >= 10000 && (iGen +1) % 5 == 0)  
-            		|| (iGen +1) == maxGenerations) {
-            	System.out.print((iGen +1) + " of " + maxGenerations + " generations");
+            if(((iGen +1) % 50 == 0) || (iGen +1) == maxGenerations) {
+            	System.out.print((iGen +1) + " of " + maxGenerations + " generations.");
             	System.out.println(" Fitness=" + this.chromosomes[bestFitnessChromIndex].fitness);            	
             }
             if (this.chromosomes[bestFitnessChromIndex].fitness >= 0) {
@@ -411,7 +409,7 @@ public abstract class GA implements Runnable
             iGen++;
         }
 
-        System.out.println("GEN " + (iGen + 1) + " AVG FITNESS = " + this.genAvgFitness[iGen-1] +
+        System.out.println("GEN " + iGen + " AVG FITNESS = " + this.genAvgFitness[iGen-1] +
                            " AVG DEV = " + this.genAvgDeviation[iGen-1]);
 
         //addChromosomesToLog(iGen, 10); //display Chromosomes to system.out
